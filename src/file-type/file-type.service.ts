@@ -17,7 +17,11 @@ export class FileTypeService {
 
     // 获取所有文件类型
     async findAll() {
-        return this.prisma.fileType.findMany()
+        const res = await this.prisma.fileType.findMany()
+        if (res.length === 0) {
+            return { message: 'No file types found' }
+        }
+        return res
     }
 
     // 获取单个文件类型

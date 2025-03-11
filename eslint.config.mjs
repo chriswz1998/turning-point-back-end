@@ -28,6 +28,8 @@ export default tseslint.config(
     },
     {
         rules: {
+            'no-unsafe-assignment': 'off',
+            'no-unused-vars': 'off',
             'prettier/prettier': 'warn',
             '@typescript-eslint/no-unsafe-call': 'off'
         }
