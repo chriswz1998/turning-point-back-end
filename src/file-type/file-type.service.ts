@@ -35,6 +35,18 @@ export class FileTypeService {
         return fileType
     }
 
+    async findByName(name: string) {
+        const fileType = await this.prisma.fileType.findUnique({
+            where: {
+                typename: name
+            }
+        })
+        if (!fileType) {
+            throw new NotFoundException('File Type not found')
+        }
+        return fileType
+    }
+
     // 删除文件类型
     async remove(id: string) {
         return this.prisma.fileType.delete({

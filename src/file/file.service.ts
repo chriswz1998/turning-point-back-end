@@ -3,14 +3,40 @@ import { PrismaService } from '@/prisma/prisma.service'
 import { UploadFileDto } from './dto/upload-file.dto'
 import { FileTypeService } from '@/file-type/file-type.service'
 import { RentSupplementRequestService } from '@/rent-supplement/rent-supplement.service'
-import { RentSupplementRequest } from '@prisma/client'
+import {
+    FlowThrough,
+    GoalsAndProgress,
+    IncidentReport,
+    Individuals,
+    LossOfService,
+    OverdoseSafetyPlan,
+    RentSupplementRequest,
+    SafetyPlan,
+    ShelterDiversionLog
+} from '@prisma/client'
+import { FlowThroughService } from '@/flow-through/flow-through.service'
+import { LossOfServiceService } from '@/loss-of-service/loss-of-service.service'
+import { GoalsAndProgressService } from '@/goals-and-progress/goals-and-progress.service'
+import { SafetyPlanService } from '@/safety-plan/safety-plan.service'
+import { OverdoseSafetyPlanService } from '@/overdose-safety-plan/overdose-safety-plan.service'
+import { IncidentReportService } from '@/incident-report/incident-report.service'
+import { IndividualsService } from '@/Individuals/Individuals.service'
+import { ShelterDiversionLogService } from '@/shelter-diversion-log/shelter-diversion-log.service'
 
 @Injectable()
 export class FileService {
     constructor(
         private prisma: PrismaService,
         private fileTypeService: FileTypeService,
-        private rentSupplementRequestService: RentSupplementRequestService
+        private rentSupplementRequestService: RentSupplementRequestService,
+        private flowThroughService: FlowThroughService,
+        private lossOfServiceService: LossOfServiceService,
+        private goalAndProgressService: GoalsAndProgressService,
+        private safetyPlanService: SafetyPlanService,
+        private overdoesSafetyPlanService: OverdoseSafetyPlanService,
+        private incidentReportService: IncidentReportService,
+        private individualsService: IndividualsService,
+        private shelterDiversionLogService: ShelterDiversionLogService
     ) {}
 
     async uploadFile(uploadFileDto: UploadFileDto) {
@@ -20,15 +46,15 @@ export class FileService {
             throw new BadRequestException('Invalid request format')
         }
 
+        const fileTypeName = await this.fileTypeService.findByName(filetype)
+
         // 创建 File 记录
         const fileRecord = await this.prisma.file.create({
             data: {
                 filename,
-                filetypeId: filetype
+                filetypeId: fileTypeName.id
             }
         })
-
-        const fileTypeName = await this.fileTypeService.findOne(filetype)
 
         if (fileTypeName.typename === 'Rent Supplement Request') {
             await this.rentSupplementRequestService.createMany(
@@ -37,36 +63,51 @@ export class FileService {
             )
             console.log('set data to Rent Supplement Request')
         }
-
         if (fileTypeName.typename === 'Intake Reporting') {
             console.log('set data to Intake Reporting')
         }
         if (fileTypeName.typename === 'Flow Through') {
+            await this.flowThroughService.createMany(records as FlowThrough[], fileRecord.id)
             console.log('set data to Flow Through')
         }
         if (fileTypeName.typename === 'Loss of Service') {
+            await this.lossOfServiceService.createMany(records as LossOfService[], fileRecord.id)
             console.log('set data to Loss of Service')
         }
-
         if (fileTypeName.typename === 'Goals and Progress') {
+            await this.goalAndProgressService.createMany(
+                records as GoalsAndProgress[],
+                fileRecord.id
+            )
             console.log('set data to Goals and Progress')
         }
         if (fileTypeName.typename === 'Safety Plan') {
+            await this.safetyPlanService.createMany(records as SafetyPlan[], fileRecord.id)
             console.log('set data to Safety Plan')
         }
         if (fileTypeName.typename === 'Overdose Safety Plan') {
+            await this.overdoesSafetyPlanService.createMany(
+                records as OverdoseSafetyPlan[],
+                fileRecord.id
+            )
             console.log('set data to Overdose Safety Plan')
         }
         if (fileTypeName.typename === 'Incident Report') {
+            await this.incidentReportService.createMany(records as IncidentReport[], fileRecord.id)
             console.log('set data to Incident Report')
         }
         if (fileTypeName.typename === 'Individuals') {
+            await this.individualsService.createMany(records as Individuals[], fileRecord.id)
             console.log('set data to individuals')
         }
         if (fileTypeName.typename === 'uniqueIndividuals') {
             console.log('set data to uniqueIndividuals')
         }
         if (fileTypeName.typename === 'Shelter Diversion Follow-Up Log') {
+            await this.shelterDiversionLogService.createMany(
+                records as ShelterDiversionLog[],
+                fileRecord.id
+            )
             console.log('set data to Shelter Diversion Follow-Up Log')
         }
 

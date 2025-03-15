@@ -53,7 +53,8 @@ model FileType {
 
 model Individuals {
   id                    String    @id @default(cuid())
-  name                  String
+  ClientPhoto           String?
+  person                String
   dateOfBirth           DateTime?
   site                  String?
   programs              String?
@@ -67,7 +68,7 @@ model FlowThrough {
   id            String    @id @default(cuid())
   individual    String
   programOrSite String?
-  startDate     DateTime
+  startDate     DateTime?
   exitDate      DateTime?
   exitReason    String?
 
@@ -78,17 +79,17 @@ model FlowThrough {
 }
 
 model LossOfService {
-  id                   String    @id @default(cuid())
-  individual           String
-  programOrSite        String?
-  startDateTime        DateTime
-  endDateTime          DateTime?
-  reviewForRestriction Boolean
-  reasonForRestriction String?
-  relatedToIncident    Boolean
-  staffReporting       String?
-  rationaleForLOS      String?
-  managerApproved      Boolean
+  id                                String    @id @default(cuid())
+  Individual                        String
+  ManagerApproved                   String?
+  ProgramOrSite                     String?
+  RationaleForLOSMore48Hours        String?
+  ReasonAndRationaleForRestriction  String?
+  ReviewForTPCSLOS                  String?
+  StaffReporting                    String?
+  StartDateTimeOfLOS                DateTime?
+  WasThisRelatedToACriticalIncident String?
+  EndDateTimeOfLOS                  DateTime?
 
   fileId String? // 允许为空
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
@@ -114,17 +115,17 @@ model RentSupplementRequest {
 
 model GoalsAndProgress {
   id               String    @id @default(cuid())
-  individual       String // 个人姓名
-  programResidence String? // 计划/居住地
-  goalTitle        String // 目标标题
-  goalType         String // 目标类型
-  startDate        DateTime // 目标开始日期
-  completionDate   DateTime? // 目标完成日期（可为空）
-  discontinuedDate DateTime? // 目标中止日期（可为空）
-  goalDescription  String? // 目标描述
-  goalProgress     String? // 目标进展
+  individual       String
+  programResidence String?
+  goalTitle        String?
+  goalType         String?
+  startDate        DateTime?
+  completionDate   DateTime?
+  discontinuedDate DateTime?
+  goalDescription  String?
+  personalOutcome  String?
 
-  fileId String? // 允许为空
+  fileId String?
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   @@index([fileId])
@@ -136,8 +137,8 @@ model SafetyPlan {
   programOrSite          String? // 计划/居住地
   selfSoothingStrategies String? // 自我安抚策略
   reasonsForLiving       String? // 生活意义（帮助度过困难时期）
-  supportContacts        String? // 支持联系人
-  safePlaces             String? // 安全地点
+  supportConnections     String? // 支持联系人
+  safeSpaces             String? // 安全地点
 
   fileId String? // 允许为空
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
@@ -146,16 +147,16 @@ model SafetyPlan {
 }
 
 model OverdoseSafetyPlan {
-  id                    String   @id @default(cuid())
-  individual            String // 个人姓名
-  programOrSite         String? // 计划/居住地
-  staffCompletingForm   String? // 填表工作人员
-  todaysDate            DateTime // 填写日期
-  increasedRiskFactors  String? // 导致药物过量的高风险因素
-  riskReductionActions  String? // 降低风险的行动
-  wellnessStrategies    String? // 保持健康的行动
-  wellnessSupportPeople String? // 支持健康的人
-  crisisContacts        String? // 危机联系人
+  id                   String    @id @default(cuid())
+  CrisisContacts       String?
+  Individual           String
+  ProgramOrSite        String?
+  RiskFactors          String?
+  RiskReductionActions String?
+  StaffMember          String?
+  SupportPeople        String?
+  TodaysDate           DateTime?
+  WellnessHabits       String?
 
   fileId String? // 允许为空
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
@@ -164,13 +165,13 @@ model OverdoseSafetyPlan {
 }
 
 model IncidentReport {
-  id                    String   @id @default(cuid())
-  clientInvolved        String // 事件涉及的人员
-  programOrSite         String? // 发生地点
-  incidentDateTime      DateTime // 事件发生时间
-  degreeOfInjury        String? // 伤害程度
-  typeOfInjury          String? // 伤害类型
-  typeOfSeriousIncident String? // 事件类型
+  id                    String    @id @default(cuid())
+  clientInvolved        String
+  programOrSite         String?
+  dateAndTimeOfIncident DateTime?
+  degreeOfInjury        String?
+  typeOfInjury          String?
+  typeOfSeriousIncident String?
 
   fileId String? // 允许为空
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
@@ -193,18 +194,18 @@ model UniqueIndividual {
 }
 
 model ShelterDiversionLog {
-  id                  String   @id @default(cuid())
-  community           String? // 社区
-  initialFollowUpDate DateTime // 初始跟进日期
-  currentGoals        String? // 当前目标
-  goalDescription     String? // 目标描述
-  followUpLog         String? // 跟进记录
-  referralLog         String? // 推荐记录
-  successfulDiversion Boolean // 是否成功转移
-  divertedTo          String? // 转移至何处
-  diversionMethod     String? // 转移方式
-  diversionCost       Float? // 转移成本
-  evictionPrevention  Boolean // 是否涉及驱逐预防
+  id                      String    @id @default(cuid())
+  community               String? // 社区
+  currentGoals            String? // 当前目标
+  currentGoalsDescription String?
+  diversionCost           Float? // 转移成本
+  diversionMethod         String? // 转移方式
+  divertedTo              String? // 转移至何处
+  evictionPrevention      String? // 是否涉及驱逐预防
+  followUpLog             String? // 跟进记录
+  initialFollowUpDate     DateTime? // 初始跟进日期
+  referralLog             String? // 推荐记录
+  successfulDiversion     String? // 是否成功转移
 
   fileId String? // 允许为空
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
