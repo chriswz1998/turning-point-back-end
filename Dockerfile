@@ -7,14 +7,17 @@ WORKDIR /app
 # 复制 package.json 和 package-lock.json
 COPY package*.json ./
 
-# 安装 nestjs/cli（全局）
-RUN npm install -g @nestjs/cli
+# 安装全局 NestJS CLI 和 Prisma CLI
+RUN npm install -g @nestjs/cli @prisma/client prisma
 
 # 安装项目依赖
 RUN npm install --only=production
 
-# 复制整个项目到容器（包括 dist 目录）
+# 复制整个项目到容器（包括 Prisma Schema）
 COPY . .
+
+# 运行 Prisma 代码生成
+RUN npx prisma generate
 
 # 构建 NestJS 应用
 RUN npm run build
