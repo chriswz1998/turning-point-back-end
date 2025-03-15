@@ -7,7 +7,10 @@ WORKDIR /app
 # 复制 package.json 和 package-lock.json
 COPY package*.json ./
 
-# 安装依赖（仅生产环境）
+# 安装 nestjs/cli（全局）
+RUN npm install -g @nestjs/cli
+
+# 安装项目依赖
 RUN npm install --only=production
 
 # 复制整个项目到容器（包括 dist 目录）
