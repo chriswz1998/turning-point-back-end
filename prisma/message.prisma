@@ -1,0 +1,215 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  name      String?
+  avatar    String?
+  role      Role     @default(USER) // 添加角色字段
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model File {
+  id         String   @id @default(cuid())
+  filename   String
+  filetypeId String
+  uploadtime DateTime @default(now())
+
+  filetype              FileType                @relation(fields: [filetypeId], references: [id], onDelete: Cascade)
+  RentSupplementRequest RentSupplementRequest[]
+  Individuals           Individuals[]
+  FlowThrough           FlowThrough[]
+  LossOfService         LossOfService[]
+  GoalsAndProgress      GoalsAndProgress[]
+  SafetyPlan            SafetyPlan[]
+  OverdoseSafetyPlan    OverdoseSafetyPlan[]
+  IncidentReport        IncidentReport[]
+  UniqueIndividual      UniqueIndividual[]
+  ShelterDiversionLog   ShelterDiversionLog[]
+
+  @@index([filetypeId])
+}
+
+model FileType {
+  id       String   @id @default(cuid())
+  typename String   @unique
+  createAt DateTime @default(now())
+
+  files File[]
+}
+
+model Individuals {
+  id                    String    @id @default(cuid())
+  name                  String
+  dateOfBirth           DateTime?
+  site                  String?
+  programs              String?
+  dateEnteredIntoSystem DateTime?
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+}
+
+model FlowThrough {
+  id            String    @id @default(cuid())
+  individual    String
+  programOrSite String?
+  startDate     DateTime
+  exitDate      DateTime?
+  exitReason    String?
+  duration      Float? // for average calculatio
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model LossOfService {
+  id                   String    @id @default(cuid())
+  individual           String
+  programOrSite        String?
+  startDateTime        DateTime
+  endDateTime          DateTime?
+  reviewForRestriction Boolean
+  reasonForRestriction String?
+  relatedToIncident    Boolean
+  staffReporting       String?
+  rationaleForLOS      String?
+  managerApproved      Boolean
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model RentSupplementRequest {
+  id                    String    @id @default(cuid())
+  individual            String
+  program               String?
+  subsidyAmount         DateTime?
+  dateOfRequest         DateTime
+  rentSupplementProgram String?
+  homeAddress           String?
+  fullMonthlyRentAmount String?
+  notes                 String?
+  fileId                String?
+  file                  File?     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model GoalsAndProgress {
+  id               String    @id @default(cuid())
+  individual       String // 个人姓名
+  programResidence String? // 计划/居住地
+  goalTitle        String // 目标标题
+  goalType         String // 目标类型
+  startDate        DateTime // 目标开始日期
+  completionDate   DateTime? // 目标完成日期（可为空）
+  discontinuedDate DateTime? // 目标中止日期（可为空）
+  goalDescription  String? // 目标描述
+  goalProgress     String? // 目标进展
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model SafetyPlan {
+  id                     String  @id @default(cuid())
+  individual             String // 个人姓名
+  programOrSite          String? // 计划/居住地
+  selfSoothingStrategies String? // 自我安抚策略
+  reasonsForLiving       String? // 生活意义（帮助度过困难时期）
+  supportContacts        String? // 支持联系人
+  safePlaces             String? // 安全地点
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model OverdoseSafetyPlan {
+  id                    String   @id @default(cuid())
+  individual            String // 个人姓名
+  programOrSite         String? // 计划/居住地
+  staffCompletingForm   String? // 填表工作人员
+  todaysDate            DateTime // 填写日期
+  increasedRiskFactors  String? // 导致药物过量的高风险因素
+  riskReductionActions  String? // 降低风险的行动
+  wellnessStrategies    String? // 保持健康的行动
+  wellnessSupportPeople String? // 支持健康的人
+  crisisContacts        String? // 危机联系人
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model IncidentReport {
+  id               String   @id @default(cuid())
+  clientInvolved   String // 事件涉及的人员
+  programOrSite    String? // 发生地点
+  incidentDateTime DateTime // 事件发生时间
+  degreeOfInjury   String? // 伤害程度
+  typeOfInjury     String? // 伤害类型
+  incidentType     String?
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model UniqueIndividual {
+  id                    String    @id @default(cuid())
+  name                  String // 个人姓名
+  dateOfBirth           DateTime? // 出生日期
+  site                  String? // 站点
+  programs              String? // 参与的项目
+  dateEnteredIntoSystem DateTime? // 录入系统日期
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
+
+model ShelterDiversionLog {
+  id                  String   @id @default(cuid())
+  community           String? // 社区
+  initialFollowUpDate DateTime // 初始跟进日期
+  currentGoals        String? // 当前目标
+  goalDescription     String? // 目标描述
+  followUpLog         String? // 跟进记录
+  referralLog         String? // 推荐记录
+  successfulDiversion Boolean // 是否成功转移
+  divertedTo          String? // 转移至何处
+  diversionMethod     String? // 转移方式
+  diversionCost       Float? // 转移成本
+  evictionPrevention  Boolean // 是否涉及驱逐预防
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([fileId])
+}
