@@ -1,8 +1,15 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
 import * as bcrypt from 'bcryptjs'
 import * as jwt from 'jsonwebtoken'
-import { User } from '@prisma/client'
+
+interface JwtPayload {
+    sub: string
+    email: string
+    role: string
+    iat: number
+    exp: number
+}
 
 @Injectable()
 export class UsersService {
@@ -13,6 +20,20 @@ export class UsersService {
         return this.prisma.user.findUnique({
             where: { email }
         })
+    }
+
+    async getUserInfo(token: string) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload
+            return await this.prisma.user.findUnique({
+                where: {
+                    email: decoded.email
+                }
+            })
+        } catch (err) {
+            console.log(err)
+            throw new UnauthorizedException('Invalid token')
+        }
     }
 
     async createUser(email: string, password: string, name?: string, avatar?: string) {

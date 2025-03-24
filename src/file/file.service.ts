@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { PrismaService } from '@/prisma/prisma.service'
 import { UploadFileDto } from './dto/upload-file.dto'
 import { FileTypeService } from '@/file-type/file-type.service'
@@ -41,7 +41,7 @@ export class FileService {
 
     async uploadFile(uploadFileDto: UploadFileDto) {
         const { filename, filetype, records } = uploadFileDto
-
+        console.log(filename, filetype, records)
         if (!filename || !filetype || !Array.isArray(records)) {
             throw new BadRequestException('Invalid request format')
         }
@@ -114,6 +114,19 @@ export class FileService {
         return {
             message: 'Upload successful',
             fileId: fileRecord.id
+        }
+    }
+
+    async RecentlyFiles() {
+        try {
+            return await this.prisma.file.findMany({
+                orderBy: {
+                    uploadtime: 'desc'
+                },
+                take: 5
+            })
+        } catch (e) {
+            console.log(e)
         }
     }
 }

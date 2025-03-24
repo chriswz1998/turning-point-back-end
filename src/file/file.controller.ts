@@ -10,7 +10,13 @@ export class FileController {
     @UseGuards(JwtAuthGuard)
     @Post('upload')
     async upload(@Body() uploadFileDto: UploadFileDto) {
-        return this.fileService.uploadFile(uploadFileDto)
+        return await this.fileService.uploadFile(uploadFileDto)
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('recentlyFiles')
+    async recentlyFiles() {
+        return await this.fileService.RecentlyFiles()
     }
 
     @UseGuards(JwtAuthGuard)
