@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common'
+import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common'
 import { FileService } from './file.service'
 import { UploadFileDto } from './dto/upload-file.dto'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
@@ -11,5 +11,11 @@ export class FileController {
     @Post('upload')
     async upload(@Body() uploadFileDto: UploadFileDto) {
         return this.fileService.uploadFile(uploadFileDto)
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('test')
+    test() {
+        return { message: 'test' }
     }
 }
