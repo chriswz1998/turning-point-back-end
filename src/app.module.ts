@@ -15,6 +15,7 @@ import { OverdoseSafetyPlanModule } from '@/overdose-safety-plan/overdose-safety
 import { IncidentReportModule } from '@/incident-report/incident-report.module'
 import { IndividualsModule } from '@/Individuals/Individuals.module'
 import { ShelterDiversionLogModule } from '@/shelter-diversion-log/shelter-diversion-log.module'
+import { ReportModule } from './report/report.module';
 
 @Module({
     imports: [
@@ -31,7 +32,8 @@ import { ShelterDiversionLogModule } from '@/shelter-diversion-log/shelter-diver
         IndividualsModule,
         ShelterDiversionLogModule,
         AuthModule,
-        UsersModule
+        UsersModule,
+        ReportModule
     ],
     controllers: [AppController],
     providers: [AppService]
