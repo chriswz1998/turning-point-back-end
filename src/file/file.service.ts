@@ -129,4 +129,27 @@ export class FileService {
             console.log(e)
         }
     }
+
+    async FileByPage(page: number = 1, pageSize: number = 10) {
+        const skip = (page - 1) * pageSize
+        const take = pageSize
+
+        const [data, total] = await this.prisma.$transaction([
+            this.prisma.file.findMany({
+                skip,
+                take
+            }),
+            this.prisma.file.count()
+        ])
+
+        return {
+            data,
+            pagination: {
+                page,
+                pageSize,
+                total,
+                totalPages: Math.ceil(total / pageSize)
+            }
+        }
+    }
 }

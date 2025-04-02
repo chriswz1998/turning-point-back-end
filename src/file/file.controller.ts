@@ -20,6 +20,12 @@ export class FileController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @Get('fileByPage')
+    async fileByPage() {
+        return await this.fileService.FileByPage(1, 10)
+    }
+
+    @UseGuards(JwtAuthGuard)
     @Get('test')
     test() {
         return { message: 'test' }
