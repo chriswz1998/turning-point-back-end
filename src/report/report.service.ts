@@ -17,27 +17,27 @@ export class ReportService {
         })
 
         if (file?.filetype.typename === 'Safety Plan') {
-            const content = await this.prisma.safetyPlan.findMany({
+            return this.prisma.safetyPlan.findMany({
                 where: {
                     fileId: id
                 }
             })
-            console.log(content)
-            return {
-                content,
-                file
-            }
         }
-        if (file?.filetype.typename === 'Loss of Service') {
-            const content = await this.prisma.lossOfService.findMany({
+
+        if (file?.filetype.typename === 'Flow Through') {
+            return this.prisma.flowThrough.findMany({
                 where: {
                     fileId: id
                 }
             })
-            return {
-                content,
-                file
-            }
+        }
+
+        if (file?.filetype.typename === 'Loss of Service') {
+            return this.prisma.lossOfService.findMany({
+                where: {
+                    fileId: id
+                }
+            })
         }
         return { message: 'Not Found' }
     }
