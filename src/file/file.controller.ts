@@ -20,9 +20,11 @@ export class FileController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('fileByPage')
-    async fileByPage() {
-        return await this.fileService.FileByPage(1, 10)
+    @Post('fileByPage')
+    async fileByPage(
+        @Body() { pageSize, page, searchKey }: { pageSize: number; page: number; searchKey: string }
+    ) {
+        return await this.fileService.FileByPage(page, pageSize, searchKey)
     }
 
     @UseGuards(JwtAuthGuard)

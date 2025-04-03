@@ -130,16 +130,30 @@ export class FileService {
         }
     }
 
-    async FileByPage(page: number = 1, pageSize: number = 10) {
+    async FileByPage(page: number = 1, pageSize: number = 10, searchKey = '') {
         const skip = (page - 1) * pageSize
         const take = pageSize
+
+        const lowerSearchKey = searchKey.toLowerCase()
+
+        const where = searchKey
+            ? {
+                  filename: {
+                      contains: lowerSearchKey
+                  }
+              }
+            : {}
 
         const [data, total] = await this.prisma.$transaction([
             this.prisma.file.findMany({
                 skip,
-                take
+                take,
+                where,
+                include: {
+                    filetype: true
+                }
             }),
-            this.prisma.file.count()
+            this.prisma.file.count({ where })
         ])
 
         return {
