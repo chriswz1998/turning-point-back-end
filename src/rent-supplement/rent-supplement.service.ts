@@ -9,7 +9,7 @@ export class RentSupplementRequestService {
     async createMany(records: RentSupplementRequest[], fileId: string) {
         try {
             const formattedRecords = records.map((record) => ({
-                individual: record['Individual'] ? String(record['Individual']) : '',
+                Individual: record['Individual'] ? String(record['Individual']) : '',
                 program: record['Program or Site'] ? String(record['Program or Site']) : '',
                 subsidyAmount: record['Subsidy Amount'] ? String(record['Subsidy Amount']) : '',
                 dateOfRequest: record['Date of Request'] ? Number(record['Date of Request']) : 0, // 默认值
