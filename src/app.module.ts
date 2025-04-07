@@ -16,6 +16,7 @@ import { IncidentReportModule } from '@/incident-report/incident-report.module'
 import { IndividualsModule } from '@/Individuals/Individuals.module'
 import { ShelterDiversionLogModule } from '@/shelter-diversion-log/shelter-diversion-log.module'
 import { ReportModule } from './report/report.module';
+import { IntakeReportModule } from './intake-report/intake-report.module';
 
 @Module({
     imports: [
@@ -33,7 +34,8 @@ import { ReportModule } from './report/report.module';
         ShelterDiversionLogModule,
         AuthModule,
         UsersModule,
-        ReportModule
+        ReportModule,
+        IntakeReportModule
     ],
     controllers: [AppController],
     providers: [AppService]

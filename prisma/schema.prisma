@@ -39,6 +39,8 @@ model File {
   IncidentReport        IncidentReport[]
   UniqueIndividual      UniqueIndividual[]
   ShelterDiversionLog   ShelterDiversionLog[]
+  SiteList              SiteList[]
+  IntakeReport          IntakeReport[]
 
   @@index([filetypeId])
 }
@@ -98,17 +100,12 @@ model LossOfService {
 }
 
 model RentSupplementRequest {
-  id                    String  @id @default(cuid())
-  individual            String
-  program               String?
-  subsidyAmount         String?
-  dateOfRequest         Float
-  rentSupplementProgram String?
-  homeAddress           String?
-  fullMonthlyRentAmount String?
-  notes                 String?
-  fileId                String?
-  file                  File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  id            String  @id @default(cuid())
+  Individual    String
+  programOrSite String?
+  Notes         String?
+  fileId        String?
+  file          File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   @@index([fileId])
 }
@@ -211,4 +208,83 @@ model ShelterDiversionLog {
   file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
 
   @@index([fileId])
+}
+
+model SiteList {
+  id                  String @id @default(cuid())
+  Address             String
+  City                String
+  HousingType         String
+  ManagerOrSite       String
+  ManagersPhoneNumber String
+  Site                String
+  SitePhoneNumber     String
+
+  fileId String? // 允许为空
+  file   File?   @relation(fields: [fileId], references: [id], onDelete: Cascade)
+}
+
+model IntakeReport {
+  id        String   @id @default(cuid())
+  fileId    String // 关联 File 表
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  immediateNeeds             ImmediateNeed[]
+  previousLivingSituations   PreviousLivingSituation[]
+  citizenImmigrationStatuses CitizenImmigrationStatus[]
+  veteranStatuses            VeteranStatus[]
+  incomeTypes                IncomeType[]
+
+  @@index([fileId])
+}
+
+model ImmediateNeed {
+  id       String       @id @default(cuid())
+  reportId String
+  report   IntakeReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  category   String // e.g. "Addictions Recovery Services"
+  count      Int
+  percentage Float
+}
+
+model PreviousLivingSituation {
+  id       String       @id @default(cuid())
+  reportId String
+  report   IntakeReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  situation  String // e.g. "Emergency Shelter"
+  count      Int
+  percentage Float
+}
+
+model CitizenImmigrationStatus {
+  id       String       @id @default(cuid())
+  reportId String
+  report   IntakeReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  status     String // e.g. "Refugee"
+  count      Int
+  percentage Float
+}
+
+model VeteranStatus {
+  id       String       @id @default(cuid())
+  reportId String
+  report   IntakeReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  status     String
+  count      Int
+  percentage Float
+}
+
+model IncomeType {
+  id       String       @id @default(cuid())
+  reportId String
+  report   IntakeReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+
+  type       String // e.g. "CPP", "No Income"
+  count      Int
+  percentage Float
 }

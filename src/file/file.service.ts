@@ -41,7 +41,6 @@ export class FileService {
 
     async uploadFile(uploadFileDto: UploadFileDto) {
         const { filename, filetype, records } = uploadFileDto
-        console.log(filename, filetype, records)
         if (!filename || !filetype || !Array.isArray(records)) {
             throw new BadRequestException('Invalid request format')
         }
