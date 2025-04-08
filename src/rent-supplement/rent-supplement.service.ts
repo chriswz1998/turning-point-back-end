@@ -10,19 +10,8 @@ export class RentSupplementRequestService {
         try {
             const formattedRecords = records.map((record) => ({
                 Individual: record['Individual'] ? String(record['Individual']) : '',
-                program: record['Program or Site'] ? String(record['Program or Site']) : '',
-                subsidyAmount: record['Subsidy Amount'] ? String(record['Subsidy Amount']) : '',
-                dateOfRequest: record['Date of Request'] ? Number(record['Date of Request']) : 0, // 默认值
-                rentSupplementProgram: record['Rent Supplement Program']
-                    ? String(record['Rent Supplement Program'])
-                    : '',
-                homeAddress: record['Applicants Current Home Address']
-                    ? String(record['Applicants Current Home Address'])
-                    : '',
-                fullMonthlyRentAmount: record['Full Monthly Rent Amount']
-                    ? String(record['Full Monthly Rent Amount'])
-                    : '',
-                notes: record['Notes'] ? String(record['Notes']) : '',
+                programOrSite: record['Program or Site'] ? String(record['Program or Site']) : '',
+                Notes: record['Notes'] ? String(record['Notes']) : '',
                 fileId
             }))
 

@@ -6,37 +6,42 @@ import { CreateIntakeReportDto } from './dto/create-intake-report.dto'
 export class IntakeReportService {
     constructor(private prisma: PrismaService) {}
 
-    CreateIntakeReport(dto: CreateIntakeReportDto) {
-        const {
-            fileId,
-            immediateNeeds,
-            previousLivingSituations,
-            citizenImmigrationStatuses,
-            incomeTypes
-        } = dto
-
-        return this.prisma.intakeReport.create({
-            data: {
-                fileId,
-                immediateNeeds: {
-                    create: immediateNeeds ?? []
+    async CreateIntakeReport(dto: CreateIntakeReportDto, fileId: string) {
+        try {
+            const {
+                immediateNeeds,
+                previousLivingSituations,
+                citizenImmigrationStatuses,
+                incomeTypes
+            } = dto
+            await this.prisma.intakeReport.create({
+                data: {
+                    fileId,
+                    immediateNeeds: {
+                        create: immediateNeeds ?? []
+                    },
+                    previousLivingSituations: {
+                        create: previousLivingSituations ?? []
+                    },
+                    citizenImmigrationStatuses: {
+                        create: citizenImmigrationStatuses ?? []
+                    },
+                    incomeTypes: {
+                        create: incomeTypes ?? []
+                    }
                 },
-                previousLivingSituations: {
-                    create: previousLivingSituations ?? []
-                },
-                citizenImmigrationStatuses: {
-                    create: citizenImmigrationStatuses ?? []
-                },
-                incomeTypes: {
-                    create: incomeTypes ?? []
+                include: {
+                    immediateNeeds: true,
+                    previousLivingSituations: true,
+                    citizenImmigrationStatuses: true,
+                    incomeTypes: true
                 }
-            },
-            include: {
-                immediateNeeds: true,
-                previousLivingSituations: true,
-                citizenImmigrationStatuses: true,
-                incomeTypes: true
-            }
-        })
+            })
+
+            return { success: true, message: 'Records created successfully' }
+        } catch (error) {
+            console.error('Error creating records:', error)
+            return { success: false, message: 'Failed to create records' }
+        }
     }
 }

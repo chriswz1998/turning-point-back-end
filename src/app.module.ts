@@ -15,8 +15,9 @@ import { OverdoseSafetyPlanModule } from '@/overdose-safety-plan/overdose-safety
 import { IncidentReportModule } from '@/incident-report/incident-report.module'
 import { IndividualsModule } from '@/Individuals/Individuals.module'
 import { ShelterDiversionLogModule } from '@/shelter-diversion-log/shelter-diversion-log.module'
-import { ReportModule } from './report/report.module';
-import { IntakeReportModule } from './intake-report/intake-report.module';
+import { ReportModule } from './report/report.module'
+import { IntakeReportModule } from './intake-report/intake-report.module'
+import { SiteListModule } from './site-list/site-list.module';
 
 @Module({
     imports: [
@@ -35,7 +36,8 @@ import { IntakeReportModule } from './intake-report/intake-report.module';
         AuthModule,
         UsersModule,
         ReportModule,
-        IntakeReportModule
+        IntakeReportModule,
+        SiteListModule
     ],
     controllers: [AppController],
     providers: [AppService]

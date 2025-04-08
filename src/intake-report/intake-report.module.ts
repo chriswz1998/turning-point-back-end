@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { IntakeReportService } from './intake-report.service';
-import { IntakeReportController } from './intake-report.controller';
+import { Module } from '@nestjs/common'
+import { IntakeReportService } from './intake-report.service'
+import { PrismaService } from '@/prisma/prisma.service'
 
 @Module({
-  providers: [IntakeReportService],
-  controllers: [IntakeReportController]
+    providers: [IntakeReportService, PrismaService],
+    exports: [IntakeReportService]
 })
 export class IntakeReportModule {}

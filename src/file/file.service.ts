@@ -12,7 +12,8 @@ import {
     OverdoseSafetyPlan,
     RentSupplementRequest,
     SafetyPlan,
-    ShelterDiversionLog
+    ShelterDiversionLog,
+    SiteList
 } from '@prisma/client'
 import { FlowThroughService } from '@/flow-through/flow-through.service'
 import { LossOfServiceService } from '@/loss-of-service/loss-of-service.service'
@@ -22,6 +23,9 @@ import { OverdoseSafetyPlanService } from '@/overdose-safety-plan/overdose-safet
 import { IncidentReportService } from '@/incident-report/incident-report.service'
 import { IndividualsService } from '@/Individuals/Individuals.service'
 import { ShelterDiversionLogService } from '@/shelter-diversion-log/shelter-diversion-log.service'
+import { IntakeReportService } from '@/intake-report/intake-report.service'
+import { CreateIntakeReportDto } from '@/intake-report/dto/create-intake-report.dto'
+import { SiteListService } from '@/site-list/site-list.service'
 
 @Injectable()
 export class FileService {
@@ -36,7 +40,9 @@ export class FileService {
         private overdoesSafetyPlanService: OverdoseSafetyPlanService,
         private incidentReportService: IncidentReportService,
         private individualsService: IndividualsService,
-        private shelterDiversionLogService: ShelterDiversionLogService
+        private shelterDiversionLogService: ShelterDiversionLogService,
+        private intakeReportService: IntakeReportService,
+        private siteListService: SiteListService
     ) {}
 
     async uploadFile(uploadFileDto: UploadFileDto) {
@@ -63,6 +69,10 @@ export class FileService {
             console.log('set data to Rent Supplement Request')
         }
         if (fileTypeName.typename === 'Intake Reporting') {
+            await this.intakeReportService.CreateIntakeReport(
+                records as CreateIntakeReportDto,
+                fileRecord.id
+            )
             console.log('set data to Intake Reporting')
         }
         if (fileTypeName.typename === 'Flow Through') {
@@ -99,15 +109,16 @@ export class FileService {
             await this.individualsService.createMany(records as Individuals[], fileRecord.id)
             console.log('set data to individuals')
         }
-        if (fileTypeName.typename === 'uniqueIndividuals') {
-            console.log('set data to uniqueIndividuals')
-        }
         if (fileTypeName.typename === 'Shelter Diversion Follow-Up Log') {
             await this.shelterDiversionLogService.createMany(
                 records as ShelterDiversionLog[],
                 fileRecord.id
             )
             console.log('set data to Shelter Diversion Follow-Up Log')
+        }
+        if (fileTypeName.typename === 'Site List') {
+            await this.siteListService.createMany(records as SiteList[], fileRecord.id)
+            console.log('set data to Site List')
         }
 
         return {

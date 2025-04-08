@@ -12,6 +12,8 @@ import { OverdoseSafetyPlanService } from '@/overdose-safety-plan/overdose-safet
 import { IncidentReportService } from '@/incident-report/incident-report.service'
 import { IndividualsService } from '@/Individuals/Individuals.service'
 import { ShelterDiversionLogService } from '@/shelter-diversion-log/shelter-diversion-log.service'
+import { IntakeReportService } from '@/intake-report/intake-report.service'
+import { SiteListService } from '@/site-list/site-list.service'
 
 @Module({
     imports: [FileTypeModule],
@@ -27,7 +29,9 @@ import { ShelterDiversionLogService } from '@/shelter-diversion-log/shelter-dive
         IncidentReportService,
         IndividualsService,
         ShelterDiversionLogService,
-        GoalsAndProgressService
+        GoalsAndProgressService,
+        IntakeReportService,
+        SiteListService
     ],
     exports: [FileService]
 })

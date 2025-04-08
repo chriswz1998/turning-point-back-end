@@ -23,8 +23,6 @@ export class IncomeTypeDto {
 }
 
 export class CreateIntakeReportDto {
-    fileId: string
-
     immediateNeeds?: ImmediateNeedDto[]
     previousLivingSituations?: PreviousLivingSituationDto[]
     citizenImmigrationStatuses?: CitizenImmigrationStatusDto[]

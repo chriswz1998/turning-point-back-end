@@ -10,8 +10,10 @@ import {
     RentSupplementRequest,
     SafetyPlan,
     ShelterDiversionLog,
+    SiteList,
     UniqueIndividual
 } from '@prisma/client'
+import { CreateIntakeReportDto } from '@/intake-report/dto/create-intake-report.dto'
 
 export class UploadFileDto {
     @IsString()
@@ -47,4 +49,6 @@ export class UploadFileDto {
         | IncidentReport[]
         | UniqueIndividual[]
         | ShelterDiversionLog[]
+        | CreateIntakeReportDto
+        | SiteList[]
 }
