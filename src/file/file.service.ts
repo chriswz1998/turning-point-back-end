@@ -66,40 +66,33 @@ export class FileService {
                 records as RentSupplementRequest[],
                 fileRecord.id
             )
-            console.log('set data to Rent Supplement Request')
         }
         if (fileTypeName.typename === 'Intake Reporting') {
             await this.intakeReportService.CreateIntakeReport(
                 records as CreateIntakeReportDto,
                 fileRecord.id
             )
-            console.log('set data to Intake Reporting')
         }
         if (fileTypeName.typename === 'Flow Through') {
             await this.flowThroughService.createMany(records as FlowThrough[], fileRecord.id)
-            console.log('set data to Flow Through')
         }
         if (fileTypeName.typename === 'Loss of Service') {
             await this.lossOfServiceService.createMany(records as LossOfService[], fileRecord.id)
-            console.log('set data to Loss of Service')
         }
         if (fileTypeName.typename === 'Goals and Progress') {
             await this.goalAndProgressService.createMany(
                 records as GoalsAndProgress[],
                 fileRecord.id
             )
-            console.log('set data to Goals and Progress')
         }
         if (fileTypeName.typename === 'Safety Plan') {
             await this.safetyPlanService.createMany(records as SafetyPlan[], fileRecord.id)
-            console.log('set data to Safety Plan')
         }
         if (fileTypeName.typename === 'Overdose Safety Plan') {
             await this.overdoesSafetyPlanService.createMany(
                 records as OverdoseSafetyPlan[],
                 fileRecord.id
             )
-            console.log('set data to Overdose Safety Plan')
         }
         if (fileTypeName.typename === 'Incident Report') {
             await this.incidentReportService.createMany(records as IncidentReport[], fileRecord.id)

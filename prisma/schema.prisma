@@ -149,7 +149,7 @@ model OverdoseSafetyPlan {
   Individual           String
   ProgramOrSite        String?
   RiskFactors          String?
-  RiskReductionActions String?
+  RiskReductionActions String?   @db.Text
   StaffMember          String?
   SupportPeople        String?
   TodaysDate           DateTime?
