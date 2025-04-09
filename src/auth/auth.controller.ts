@@ -4,17 +4,25 @@ import {
     Post,
     HttpCode,
     HttpStatus,
-    Headers,
     Get,
-    UnauthorizedException
+    UseGuards,
+    Request
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { UsersService } from '@/users/users.service'
 import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'
 import { SignInDto } from './dto/signIn.dto'
 import { RegisterDto } from './dto/register.dto'
-import * as jwt from 'jsonwebtoken'
-import { User } from '@prisma/client'
+import { JwtAuthGuard } from './jwt-auth.guard'
+interface User {
+    id: string
+    email: string
+    password: string
+    name: string
+    avatar: string
+    role: 'ADMIN' | 'USER' // 或者用 enum Role
+    createdAt: Date
+}
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -33,13 +41,10 @@ export class AuthController {
         return this.authService.signIn(signInDto.email, signInDto.password)
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get('userinfo')
-    async userInfo(@Headers('authorization') authHeader: string) {
-        if (!authHeader) {
-            throw new UnauthorizedException('No Authorization header provided')
-        }
-        const token = authHeader.replace('Bearer ', '')
-        return await this.usersService.getUserInfo(token)
+    userInfo(@Request() req: { user: User }) {
+        return req.user
     }
 
     // Register

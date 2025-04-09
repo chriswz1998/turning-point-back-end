@@ -152,6 +152,9 @@ export class FileService {
                 skip,
                 take,
                 where,
+                orderBy: {
+                    uploadtime: 'desc'
+                },
                 include: {
                     filetype: true
                 }

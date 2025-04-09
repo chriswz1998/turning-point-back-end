@@ -17,7 +17,8 @@ import { IndividualsModule } from '@/Individuals/Individuals.module'
 import { ShelterDiversionLogModule } from '@/shelter-diversion-log/shelter-diversion-log.module'
 import { ReportModule } from './report/report.module'
 import { IntakeReportModule } from './intake-report/intake-report.module'
-import { SiteListModule } from './site-list/site-list.module';
+import { SiteListModule } from './site-list/site-list.module'
+import { ImageAuthModule } from './image-auth/image-auth.module'
 
 @Module({
     imports: [
@@ -37,7 +38,8 @@ import { SiteListModule } from './site-list/site-list.module';
         UsersModule,
         ReportModule,
         IntakeReportModule,
-        SiteListModule
+        SiteListModule,
+        ImageAuthModule
     ],
     controllers: [AppController],
     providers: [AppService]
