@@ -4,9 +4,9 @@ import {
     Post,
     HttpCode,
     HttpStatus,
-    Get,
     UseGuards,
-    Request
+    Request,
+    UnauthorizedException
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { UsersService } from '@/users/users.service'
@@ -14,12 +14,13 @@ import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger'
 import { SignInDto } from './dto/signIn.dto'
 import { RegisterDto } from './dto/register.dto'
 import { JwtAuthGuard } from './jwt-auth.guard'
+import { Role } from '@prisma/client'
 interface User {
     id: string
+    avatar: string
     email: string
     password: string
     name: string
-    avatar: string
     role: 'ADMIN' | 'USER' // 或者用 enum Role
     createdAt: Date
 }
@@ -42,16 +43,17 @@ export class AuthController {
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get('userinfo')
-    userInfo(@Request() req: { user: User }) {
-        return req.user
-    }
-
-    // Register
     @Post('register')
     @ApiOperation({ summary: 'User registration' })
     @ApiBody({ type: RegisterDto })
-    async register(@Body() body: RegisterDto) {
+    async register(@Body() body: RegisterDto, @Request() req: { user: User }) {
+        const currentUser = req.user
+
+        // ✅ 检查角色权限
+        if (currentUser.role !== Role.ADMIN) {
+            throw new UnauthorizedException('Only admin users can create new accounts')
+        }
+
         return this.usersService.createUser(body.email, body.password, body.name, body.avatar)
     }
 }

@@ -107,7 +107,6 @@ export class FileService {
                 records as ShelterDiversionLog[],
                 fileRecord.id
             )
-            console.log('set data to Shelter Diversion Follow-Up Log')
         }
         if (fileTypeName.typename === 'Site List') {
             await this.siteListService.createMany(records as SiteList[], fileRecord.id)

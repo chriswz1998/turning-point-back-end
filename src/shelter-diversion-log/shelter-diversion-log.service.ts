@@ -15,26 +15,28 @@ export class ShelterDiversionLogService {
                 return isValid(parsed) ? formatISO(parsed) : null
             }
             const formattedRecords = records.map((record) => {
-                const ifud = record['InitialFollowUpDate'] as string
+                const ifud = record['Initial follow-up Date'] as string
                 return {
                     community: record['Community'] ? String(record['Community']) : null,
-                    currentGoals: record['CurrentGoals'] ? String(record['CurrentGoals']) : null,
-                    currentGoalsDescription: record['CurrentGoalsDescription']
-                        ? String(record['CurrentGoalsDescription'])
+                    currentGoals: record['Current Goals'] ? String(record['Current Goals']) : null,
+                    currentGoalsDescription: record['Current Goals Description']
+                        ? String(record['Current Goals Description'])
                         : null,
-                    diversionCost: record['DiversionCost'] ? Number(record['DiversionCost']) : null,
-                    diversionMethod: record['DiversionMethod']
-                        ? String(record['DiversionMethod'])
+                    diversionCost: record['Diversion Cost']
+                        ? Number(record['Diversion Cost'])
                         : null,
-                    divertedTo: record['DivertedTo'] ? String(record['DivertedTo']) : null,
-                    evictionPrevention: record['EvictionPrevention']
-                        ? String(record['EvictionPrevention'])
+                    diversionMethod: record['Diversion Method']
+                        ? String(record['Diversion Method'])
                         : null,
-                    followUpLog: record['FollowUpLog'] ? String(record['FollowUpLog']) : null,
+                    divertedTo: record['Diverted To'] ? String(record['Diverted To']) : null,
+                    evictionPrevention: record['Eviction Prevention']
+                        ? String(record['Eviction Prevention'])
+                        : null,
+                    followUpLog: record['Follow-up log'] ? String(record['Follow-up log']) : null,
                     initialFollowUpDate: ifud ? parseDate(ifud) : null,
-                    referralLog: record['ReferralLog'] ? String(record['ReferralLog']) : null,
-                    successfulDiversion: record['SuccessfulDiversion']
-                        ? String(record['SuccessfulDiversion'])
+                    referralLog: record['Referral log'] ? String(record['Referral log']) : null,
+                    successfulDiversion: record['Successful Diversion']
+                        ? String(record['Successful Diversion'])
                         : null,
                     fileId
                 }

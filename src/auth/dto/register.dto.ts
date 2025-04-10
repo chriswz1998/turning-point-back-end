@@ -7,9 +7,9 @@ export class RegisterDto {
     @ApiProperty({ description: 'User password' })
     password: string
 
-    @ApiProperty({ description: 'User name', required: false })
-    name?: string
+    @ApiProperty({ description: 'User name' })
+    name: string
 
-    @ApiProperty({ description: 'User avatar URL', required: false })
-    avatar?: string
+    @ApiProperty({ description: 'User avatar URL' })
+    avatar: string
 }
